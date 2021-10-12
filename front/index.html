@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="water.css">
+    <style>
+        .row { display: flex; }
+        .column { flex: 33%; }
+        input { width: 80%; }
+    </style>
+    <title>Moments Text Effects API</title>
+</head>
+<body>
+
+<h1>Moments Text Effects API</h1>
+<div class="row">
+    <div class="column">
+        <h2>Params</h2>
+        <form>
+            <div class="row">
+                <div class="column">
+                    <h3>Video</h3>
+                    <label for="videoInputPath">Video path:</label><br>
+                    <input type="text" name="videoInputPath" id="videoInputPath" value="test_input2.mp4"><br>
+                    <label for="duration">Duration:</label><br>
+                    <input type="text" name="duration" id="duration" value="60.0 s"><br>
+                    <label for="resolution">Resolution:</label><br>
+                    <input type="text" name="resolution" id="resolution" value="1920 x 1080"><br>
+                    <label for="videoOutputPath">Output video path:</label><br>
+                    <input type="text" name="videoOutputPath" id="videoOutputPath" value="test_output2.mp4"><br>
+                </div>
+                <div class="column">
+                    <h3>Effects</h3>
+                    <label for="textString">Text string:</label><br>
+                    <input type="text" name="textString" id="textString" value="Brutal, Savage, Rekt"><br>
+                    <label for="XY">X, Y:</label><br>
+                    <input type="text" name="XY" id="XY" value="0, 0"><br>
+                    <label for="fontsize">Font size:</label><br>
+                    <input type="text" name="fontsize" id="fontsize" value="48"><br>
+                    <label for="fontColor">Font color:</label><br>
+                    <input type="text" name="fontColor" id="fontColor" value="0x000000"><br>
+                    <label for="startTime">Start time:</label><br>
+                    <input type="text" name="startTime" id="startTime" value="0.0 s"><br>
+                    <label for="endTime">End Time:</label><br>
+                    <input type="text" name="endTime" id="endTime" value="60.0 s"><br>
+                    <input type="submit" value="Submit">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="column">
+        <h2>Result</h2>
+        <blockquote id="result" hidden></blockquote>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        const plainFormData = Object.fromEntries(formData.entries());
+        const formDataJsonString = JSON.stringify(plainFormData);
+
+        const fetchOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: formDataJsonString,
+        };
+
+        fetch('http://localhost:8899/moments',
+            fetchOptions
+        ).then(function (response) {
+            return response.text();
+        }).then(function (data) {
+            document.getElementById("result").hidden = false;
+            document.getElementById("result").innerHTML = data;
+        }).catch(function (error) {
+            console.log(">>>", error)
+        });
+    });
+</script>
+</body>
+</html>
